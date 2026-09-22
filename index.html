@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Квест: Замовник змінює ТЗ</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #eef2f5;
+        color: #202124;
+    }
+
+    .app {
+        width: 100%;
+        max-width: 760px;
+        height: 100vh;
+        margin: auto;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 0 20px rgba(0,0,0,0.08);
+    }
+
+    .header {
+        background: #ffffff;
+        border-bottom: 1px solid #ddd;
+        padding: 16px 20px;
+    }
+
+    .header h1 {
+        margin: 0;
+        font-size: 21px;
+    }
+
+    .header p {
+        margin: 5px 0 0;
+        color: #666;
+        font-size: 14px;
+    }
+
+    .progress {
+        height: 5px;
+        background: #e5e5e5;
+    }
+
+    .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #4caf50;
+        transition: width .4s;
+    }
+
+    #chat {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+    }
+
+    .message {
+        max-width: 82%;
+        padding: 12px 15px;
+        margin-bottom: 12px;
+        border-radius: 15px;
+        line-height: 1.45;
+        animation: appear .3s ease;
+    }
+
+    .bot {
+        background: #f0f2f5;
+        border-bottom-left-radius: 4px;
+    }
+
+    .client {
+        background: #fff3cd;
+        margin-left: auto;
+        border-bottom-right-radius: 4px;
+    }
+
+    .system {
+        background: #e8f5e9;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        max-width: 95%;
+    }
+
+    .name {
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #666;
+    }
+
+    .controls {
+        padding: 15px 20px 20px;
+        border-top: 1px solid #ddd;
+        background: white;
+    }
+
+    .levels {
+        display: flex;
+        gap: 8px;
+    }
+
+    button {
+        border: 0;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font-size: 15px;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    button:hover {
+        transform: translateY(-1px);
+    }
+
+    .levels button {
+        flex: 1;
+    }
+
+    .level1 {
+        background: #dff3e4;
+    }
+
+    .level2 {
+        background: #fff1b8;
+    }
+
+    .level3 {
+        background: #ffdada;
+    }
+
+    .main-button {
+        width: 100%;
+        background: #405cf5;
+        color: white;
+        font-weight: bold;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 95px;
+        padding: 12px;
+        font-family: Arial, sans-serif;
+        font-size: 15px;
+        border: 1px solid #bbb;
+        border-radius: 10px;
+        resize: vertical;
+        margin-bottom: 10px;
+    }
+
+    .choices {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .choices button {
+        background: #eef1ff;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .final-box {
+        background: #f3f7ff;
+        padding: 16px;
+        border-radius: 12px;
+        margin-top: 10px;
+    }
+
+    @keyframes appear {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media(max-width: 600px) {
+        .levels {
+            flex-direction: column;
+        }
+
+        .choices {
+            grid-template-columns: 1fr;
+        }
+
+        .message {
+            max-width: 92%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <div class="header">
+        <h1>💻 Замовник змінює ТЗ</h1>
+        <p id="stepTitle">ІТ-квест · Старт</p>
+    </div>
+
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <div id="chat"></div>
+
+    <div class="controls" id="controls"></div>
+
+</div>
+
+
+<script>
+
+const chat = document.getElementById("chat");
+const controls = document.getElementById("controls");
+const progressBar = document.getElementById("progressBar");
+const stepTitle = document.getElementById("stepTitle");
+
+let currentStep = 0;
+let selectedLevel = 0;
+
+const answers = [];
+
+
+/* -----------------------
+   ДОПОМІЖНІ ФУНКЦІЇ
+----------------------- */
+
+function message(text, type="bot", name="Квест") {
+
+    const div = document.createElement("div");
+    div.className = "message " + type;
+
+    div.innerHTML =
+        `<div class="name">${name}</div>
+         <div>${text}</div>`;
+
+    chat.appendChild(div);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+
+function setControls(html) {
+    controls.innerHTML = html;
+}
+
+
+function setProgress(percent, title) {
+    progressBar.style.width = percent + "%";
+    stepTitle.textContent = title;
+}
+
+
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+/* -----------------------
+   СТАРТ
+----------------------- */
+
+async function startScreen() {
+
+    setProgress(5, "ІТ-квест · Старт");
+
+    message(
+        `Ви — команда розробників.<br><br>
+        До вас звернулася школа з новим проєктом.`
+    );
+
+    await delay(500);
+
+    message(
+        `<b>Початкове ТЗ</b><br><br>
+        Створити сайт школи.<br><br>
+        На сайті мають бути:<br>
+        • головна сторінка;<br>
+        • новини;<br>
+        • інформація про школу;<br>
+        • контакти.<br><br>
+        ⏱ Термін: <b>3 тижні</b>.`,
+        "client",
+        "Замовник"
+    );
+
+    setControls(`
+        <button class="main-button" onclick="step1()">
+            🚀 Почати проєкт
+        </button>
+    `);
+}
+
+
+/* -----------------------
+   КРОК 1
+----------------------- */
+
+async function step1() {
+
+    currentStep = 1;
+
+    setProgress(25, "Крок 1 із 3");
+
+    setControls("");
+
+    message(
+        `Команда погодила ТЗ і почала роботу.<br><br>
+        Минув тиждень...`
+    );
+
+    await delay(500);
+
+    message(
+        `Подивився першу версію.<br><br>
+        <b>Дизайн якийсь не такий. Зробіть сучасніше.</b>`,
+        "client",
+        "Замовник"
+    );
+
+    await delay(400);
+
+    message(
+        `Що робитиме ваша команда?<br><br>
+        Оберіть рівень завдання.`
+    );
+
+    showLevels();
+}
+
+
+/* -----------------------
+   ВИБІР РІВНЯ
+----------------------- */
+
+function showLevels() {
+
+    setControls(`
+        <div class="levels">
+
+            <button class="level1" onclick="chooseLevel(1)">
+                🟢 Рівень 1
+            </button>
+
+            <button class="level2" onclick="chooseLevel(2)">
+                🟡 Рівень 2
+            </button>
+
+            <button class="level3" onclick="chooseLevel(3)">
+                🔴 Рівень 3
+            </button>
+
+        </div>
+    `);
+}
+
+
+function chooseLevel(level) {
+
+    selectedLevel = level;
+
+    const icons = ["", "🟢", "🟡", "🔴"];
+
+    message(
+        `${icons[level]} Рівень ${level}`,
+        "system",
+        "Ваш вибір"
+    );
+
+    if(currentStep === 1) step1Task(level);
+    if(currentStep === 2) step2Task(level);
+    if(currentStep === 3) step3Task(level);
+}
+
+
+/* -----------------------
+   ЗАВДАННЯ КРОКУ 1
+----------------------- */
+
+function step1Task(level) {
+
+    let task = "";
+
+    if(level === 1) {
+        task =
+        `Замовник сказав лише:
+        <b>«Зробіть сучасніше».</b><br><br>
+        Сформулюйте <b>2 запитання</b>,
+        які допоможуть уточнити його вимогу.`;
+    }
+
+    if(level === 2) {
+        task =
+        `Запропонуйте замовнику
+        <b>2 варіанти зміни дизайну</b>.<br><br>
+        Визначте щонайменше
+        <b>2 критерії</b>, за якими можна
+        обрати між ними.`;
+    }
+
+    if(level === 3) {
+        task =
+        `Перетворіть фразу
+        <b>«Зробіть сучасніше»</b>
+        на конкретні вимоги до ТЗ,
+        які можна буде перевірити після виконання.`;
+    }
+
+    message(task);
+
+    answerBox(1);
+}
+
+
+/* -----------------------
+   КРОК 2
+----------------------- */
+
+async function step2() {
+
+    currentStep = 2;
+
+    setProgress(50, "Крок 2 із 3");
+
+    setControls("");
+
+    message(
+        `📄 <b>ТЗ уточнено.</b><br><br>
+        Команда продовжує роботу.`,
+        "system",
+        "Проєкт"
+    );
+
+    await delay(500);
+
+    message(
+        `<b>Додайте особистий кабінет учня.</b><br><br>
+        І щоб там були оцінки,
+        розклад і повідомлення.`,
+        "client",
+        "Замовник"
+    );
+
+    await delay(400);
+
+    message(
+        `Нова вимога вже впливає
+        не лише на зовнішній вигляд продукту.<br><br>
+        Оберіть рівень.`
+    );
+
+    showLevels();
+}
+
+
+/* -----------------------
+   ЗАВДАННЯ КРОКУ 2
+----------------------- */
+
+function step2Task(level) {
+
+    let task = "";
+
+    if(level === 1) {
+        task =
+        `Які <b>нові функції</b>
+        потрібно додати до продукту?<br><br>
+        Запишіть щонайменше три.`;
+    }
+
+    if(level === 2) {
+        task =
+        `Особистий кабінет означає
+        роботу з даними.<br><br>
+        Які <b>нові дані</b>
+        тепер доведеться отримувати,
+        зберігати або показувати?`;
+    }
+
+    if(level === 3) {
+        task =
+        `Перегляньте нову вимогу комплексно.<br><br>
+        Визначте:<br><br>
+        <b>функції → дані → ризики →
+        вимоги до безпеки</b>.`;
+    }
+
+    message(task);
+
+    answerBox(2);
+}
+
+
+/* -----------------------
+   КРОК 3
+----------------------- */
+
+async function step3() {
+
+    currentStep = 3;
+
+    setProgress(75, "Крок 3 із 3");
+
+    setControls("");
+
+    message(
+        `📄 <b>ТЗ знову оновлено.</b><br><br>
+        До запуску залишилося
+        лише <b>3 дні</b>.`,
+        "system",
+        "Проєкт"
+    );
+
+    await delay(600);
+
+    message(
+        `Все чудово!<br><br>
+        <b>А зробіть ще мобільний застосунок.
+        Це ж майже те саме 🙂</b>`,
+        "client",
+        "Замовник"
+    );
+
+    await delay(400);
+
+    message(
+        `Команда має прийняти рішення.<br><br>
+        Оберіть рівень.`
+    );
+
+    showLevels();
+}
+
+
+/* -----------------------
+   ЗАВДАННЯ КРОКУ 3
+----------------------- */
+
+function step3Task(level) {
+
+    if(level === 1) {
+
+        message(
+            `Що зміниться у проєкті,
+            якщо команда погодиться?<br><br>
+            Назвіть щонайменше
+            <b>3 зміни</b>.`
+        );
+
+        answerBox(3);
+    }
+
+
+    if(level === 2) {
+
+        message(
+            `До запуску лише 3 дні.<br><br>
+            Повноцінний мобільний застосунок
+            команда створити не встигає.<br><br>
+            <b>Що можна запропонувати
+            замовнику натомість?</b>`
+        );
+
+        answerBox(3);
+    }
+
+
+    if(level === 3) {
+
+        message(
+            `Потрібно домовитися із замовником.<br><br>
+            <b>Оберіть стратегію.</b>`
+        );
+
+        setControls(`
+            <div class="choices">
+
+                <button onclick="strategy('Змінити термін')">
+                    ⏱ Змінити термін
+                </button>
+
+                <button onclick="strategy('Скоротити функції')">
+                    ✂️ Скоротити функції
+                </button>
+
+                <button onclick="strategy('Зробити MVP')">
+                    🚀 Зробити MVP
+                </button>
+
+                <button onclick="strategy('Наступний реліз')">
+                    📅 Наступний реліз
+                </button>
+
+            </div>
+        `);
+    }
+}
+
+
+/* -----------------------
+   СТРАТЕГІЯ РІВНЯ 3
+----------------------- */
+
+function strategy(choice) {
+
+    message(
+        choice,
+        "system",
+        "Рішення команди"
+    );
+
+    message(
+        `Чому ви обрали саме це рішення?<br><br>
+        Коротко аргументуйте.`
+    );
+
+    answerBox(3);
+}
+
+
+/* -----------------------
+   ПОЛЕ ВІДПОВІДІ
+----------------------- */
+
+function answerBox(step) {
+
+    setControls(`
+        <textarea id="answer"
+        placeholder="Введіть відповідь команди..."></textarea>
+
+        <button class="main-button"
+        onclick="submitAnswer(${step})">
+            Надіслати відповідь
+        </button>
+    `);
+}
+
+
+function submitAnswer(step) {
+
+    const field = document.getElementById("answer");
+
+    if(!field || field.value.trim() === "") {
+        alert("Спочатку введіть відповідь.");
+        return;
+    }
+
+    const answer = field.value.trim();
+
+    answers.push({
+        step: step,
+        level: selectedLevel,
+        answer: answer
+    });
+
+    message(
+        answer,
+        "system",
+        "Ваша команда"
+    );
+
+    if(step === 1) {
+
+        message(
+            `✅ Нечітку вимогу не варто
+            одразу виконувати.<br><br>
+            Спочатку її потрібно
+            <b>уточнити й перетворити
+            на зрозуміле ТЗ.</b>`
+        );
+
+        setControls(`
+            <button class="main-button"
+            onclick="step2()">
+                Наступне повідомлення →
+            </button>
+        `);
+    }
+
+
+    if(step === 2) {
+
+        message(
+            `✅ Одна нова функція
+            може змінити одразу кілька
+            частин проєкту:<br><br>
+            функції, дані, безпеку,
+            обсяг роботи та тестування.`
+        );
+
+        setControls(`
+            <button class="main-button"
+            onclick="step3()">
+                Продовжити →
+            </button>
+        `);
+    }
+
+
+    if(step === 3) {
+
+        message(
+            `✅ Команда не просто
+            прийняла нову вимогу,
+            а оцінила її вплив
+            і запропонувала рішення.`
+        );
+
+        setControls(`
+            <button class="main-button"
+            onclick="finish()">
+                🏁 Завершити проєкт
+            </button>
+        `);
+    }
+}
+
+
+/* -----------------------
+   ФІНАЛ
+----------------------- */
+
+function finish() {
+
+    setProgress(100, "Квест завершено");
+
+    message(
+        `<b>🎯 ПРОЄКТ ЗАВЕРШЕНО</b><br><br>
+
+        ТЗ v1 — простий сайт<br>
+        ↓<br>
+        ТЗ v2 — уточнений дизайн<br>
+        ↓<br>
+        ТЗ v3 — особистий кабінет і дані<br>
+        ↓<br>
+        Нова вимога — мобільний застосунок`,
+        "system",
+        "Результат"
+    );
+
+    message(
+        `<div class="final-box">
+
+        <b>Що насправді робила команда?</b><br><br>
+
+        Нова вимога<br>
+        ↓<br>
+        <b>Уточнення</b><br>
+        ↓<br>
+        <b>Оцінка впливу</b><br>
+        ↓<br>
+        <b>Рішення</b><br>
+        ↓<br>
+        <b>Оновлене ТЗ</b>
+
+        </div>`
+    );
+
+    message(
+        `<b>Головний висновок</b><br><br>
+        ТЗ у реальному ІТ-проєкті
+        може змінюватися.<br><br>
+        Завдання команди —
+        не бездумно виконувати кожне
+        нове побажання, а
+        <b>уточнювати вимоги,
+        оцінювати наслідки,
+        домовлятися із замовником
+        та адаптувати рішення.</b>`
+    );
+
+    setControls(`
+        <button class="main-button"
+        onclick="restartQuest()">
+            🔄 Пройти ще раз
+        </button>
+    `);
+}
+
+
+/* -----------------------
+   ПОВТОР
+----------------------- */
+
+function restartQuest() {
+
+    chat.innerHTML = "";
+    controls.innerHTML = "";
+
+    currentStep = 0;
+    selectedLevel = 0;
+
+    answers.length = 0;
+
+    startScreen();
+}
+
+
+/* запуск */
+
+startScreen();
+
+</script>
+
+</body>
+</html>
