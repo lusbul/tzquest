@@ -7,202 +7,220 @@
 <title>Квест: Замовник змінює ТЗ</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #eef2f5;
-        color: #202124;
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #eef2f5;
+    color: #202124;
+}
 
-    .app {
-        width: 100%;
-        max-width: 760px;
-        height: 100vh;
-        margin: auto;
-        background: white;
-        display: flex;
-        flex-direction: column;
-        box-shadow: 0 0 20px rgba(0,0,0,0.08);
-    }
+.app {
+    width: 100%;
+    max-width: 760px;
+    min-height: 100vh;
+    margin: auto;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 0 20px rgba(0,0,0,0.08);
+}
 
-    .header {
-        background: #ffffff;
-        border-bottom: 1px solid #ddd;
-        padding: 16px 20px;
-    }
+.header {
+    background: white;
+    border-bottom: 1px solid #ddd;
+    padding: 16px 20px;
+}
 
-    .header h1 {
-        margin: 0;
-        font-size: 21px;
-    }
+.header h1 {
+    margin: 0;
+    font-size: 21px;
+}
 
-    .header p {
-        margin: 5px 0 0;
-        color: #666;
-        font-size: 14px;
-    }
+.header p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 14px;
+}
 
-    .progress {
-        height: 5px;
-        background: #e5e5e5;
-    }
+.progress {
+    height: 5px;
+    background: #e5e5e5;
+}
 
-    .progress-bar {
-        height: 100%;
-        width: 0%;
-        background: #4caf50;
-        transition: width .4s;
-    }
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #4caf50;
+    transition: width .4s;
+}
 
-    #chat {
-        flex: 1;
-        overflow-y: auto;
-        padding: 20px;
-    }
+#chat {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
 
-    .message {
-        max-width: 82%;
-        padding: 12px 15px;
-        margin-bottom: 12px;
-        border-radius: 15px;
-        line-height: 1.45;
-        animation: appear .3s ease;
-    }
+.message {
+    max-width: 82%;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border-radius: 15px;
+    line-height: 1.45;
+    animation: appear .3s ease;
+}
 
-    .bot {
-        background: #f0f2f5;
-        border-bottom-left-radius: 4px;
-    }
+.bot {
+    background: #f0f2f5;
+    border-bottom-left-radius: 4px;
+}
 
-    .client {
-        background: #fff3cd;
-        margin-left: auto;
-        border-bottom-right-radius: 4px;
-    }
+.client {
+    background: #fff3cd;
+    margin-left: auto;
+    border-bottom-right-radius: 4px;
+}
 
-    .system {
-        background: #e8f5e9;
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
-        max-width: 95%;
-    }
+.system {
+    background: #e8f5e9;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    max-width: 95%;
+}
 
-    .name {
-        font-size: 12px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #666;
-    }
+.name {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #666;
+}
 
-    .controls {
-        padding: 15px 20px 20px;
-        border-top: 1px solid #ddd;
-        background: white;
-    }
+/* ЗОБРАЖЕННЯ */
 
+.image-card {
+    width: 100%;
+    margin: 8px 0 18px;
+    text-align: center;
+}
+
+.quest-image {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    border-radius: 14px;
+    display: block;
+}
+
+/* КЕРУВАННЯ */
+
+.controls {
+    padding: 15px 20px 20px;
+    border-top: 1px solid #ddd;
+    background: white;
+}
+
+.levels {
+    display: flex;
+    gap: 8px;
+}
+
+button {
+    border: 0;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+.levels button {
+    flex: 1;
+}
+
+.level1 {
+    background: #dff3e4;
+}
+
+.level2 {
+    background: #fff1b8;
+}
+
+.level3 {
+    background: #ffdada;
+}
+
+.main-button {
+    width: 100%;
+    background: #405cf5;
+    color: white;
+    font-weight: bold;
+}
+
+textarea {
+    width: 100%;
+    min-height: 95px;
+    padding: 12px;
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    border: 1px solid #bbb;
+    border-radius: 10px;
+    resize: vertical;
+    margin-bottom: 10px;
+}
+
+.choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.choices button {
+    background: #eef1ff;
+}
+
+.final-box {
+    background: #f3f7ff;
+    padding: 16px;
+    border-radius: 12px;
+    margin-top: 10px;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media(max-width: 600px) {
     .levels {
-        display: flex;
-        gap: 8px;
-    }
-
-    button {
-        border: 0;
-        border-radius: 10px;
-        padding: 12px 14px;
-        font-size: 15px;
-        cursor: pointer;
-        transition: .2s;
-    }
-
-    button:hover {
-        transform: translateY(-1px);
-    }
-
-    .levels button {
-        flex: 1;
-    }
-
-    .level1 {
-        background: #dff3e4;
-    }
-
-    .level2 {
-        background: #fff1b8;
-    }
-
-    .level3 {
-        background: #ffdada;
-    }
-
-    .main-button {
-        width: 100%;
-        background: #405cf5;
-        color: white;
-        font-weight: bold;
-    }
-
-    textarea {
-        width: 100%;
-        min-height: 95px;
-        padding: 12px;
-        font-family: Arial, sans-serif;
-        font-size: 15px;
-        border: 1px solid #bbb;
-        border-radius: 10px;
-        resize: vertical;
-        margin-bottom: 10px;
+        flex-direction: column;
     }
 
     .choices {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        grid-template-columns: 1fr;
     }
 
-    .choices button {
-        background: #eef1ff;
+    .message {
+        max-width: 92%;
     }
 
-    .hidden {
-        display: none;
+    .quest-image {
+        max-height: 300px;
     }
-
-    .final-box {
-        background: #f3f7ff;
-        padding: 16px;
-        border-radius: 12px;
-        margin-top: 10px;
-    }
-
-    @keyframes appear {
-        from {
-            opacity: 0;
-            transform: translateY(6px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @media(max-width: 600px) {
-        .levels {
-            flex-direction: column;
-        }
-
-        .choices {
-            grid-template-columns: 1fr;
-        }
-
-        .message {
-            max-width: 92%;
-        }
-    }
+}
 </style>
 </head>
 
@@ -225,7 +243,6 @@
 
 </div>
 
-
 <script>
 
 const chat = document.getElementById("chat");
@@ -239,13 +256,14 @@ let selectedLevel = 0;
 const answers = [];
 
 
-/* -----------------------
-   ДОПОМІЖНІ ФУНКЦІЇ
------------------------ */
+/* --------------------------
+   ПОВІДОМЛЕННЯ
+-------------------------- */
 
 function message(text, type="bot", name="Квест") {
 
     const div = document.createElement("div");
+
     div.className = "message " + type;
 
     div.innerHTML =
@@ -258,25 +276,63 @@ function message(text, type="bot", name="Квест") {
 }
 
 
+/* --------------------------
+   ЗОБРАЖЕННЯ
+
+   Тут вказані назви файлів:
+   start.jpg
+   step1.jpg
+   step2.jpg
+   step3.jpg
+   final.jpg
+-------------------------- */
+
+function showImage(filename, altText="Ілюстрація") {
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "image-card";
+
+    const img = document.createElement("img");
+
+    img.src = filename;
+    img.alt = altText;
+    img.className = "quest-image";
+
+    /* Якщо картинки немає,
+       порожнє місце не показується */
+
+    img.onerror = function() {
+        wrapper.remove();
+    };
+
+    wrapper.appendChild(img);
+    chat.appendChild(wrapper);
+
+    chat.scrollTop = chat.scrollHeight;
+}
+
+
+/* --------------------------
+   КЕРУВАННЯ
+-------------------------- */
+
 function setControls(html) {
     controls.innerHTML = html;
 }
-
 
 function setProgress(percent, title) {
     progressBar.style.width = percent + "%";
     stepTitle.textContent = title;
 }
 
-
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 
-/* -----------------------
+/* ==========================
    СТАРТ
------------------------ */
+========================== */
 
 async function startScreen() {
 
@@ -287,16 +343,20 @@ async function startScreen() {
         До вас звернулася школа з новим проєктом.`
     );
 
-    await delay(500);
+    showImage("start.jpg", "Старт ІТ-проєкту");
+
+    await delay(400);
 
     message(
         `<b>Початкове ТЗ</b><br><br>
         Створити сайт школи.<br><br>
+
         На сайті мають бути:<br>
         • головна сторінка;<br>
         • новини;<br>
         • інформація про школу;<br>
         • контакти.<br><br>
+
         ⏱ Термін: <b>3 тижні</b>.`,
         "client",
         "Замовник"
@@ -310,9 +370,9 @@ async function startScreen() {
 }
 
 
-/* -----------------------
+/* ==========================
    КРОК 1
------------------------ */
+========================== */
 
 async function step1() {
 
@@ -328,6 +388,8 @@ async function step1() {
     );
 
     await delay(500);
+
+    showImage("step1.jpg", "Замовник просить змінити дизайн");
 
     message(
         `Подивився першу версію.<br><br>
@@ -347,9 +409,9 @@ async function step1() {
 }
 
 
-/* -----------------------
+/* ==========================
    ВИБІР РІВНЯ
------------------------ */
+========================== */
 
 function showLevels() {
 
@@ -391,37 +453,43 @@ function chooseLevel(level) {
 }
 
 
-/* -----------------------
+/* ==========================
    ЗАВДАННЯ КРОКУ 1
------------------------ */
+========================== */
 
 function step1Task(level) {
 
     let task = "";
 
     if(level === 1) {
+
         task =
         `Замовник сказав лише:
         <b>«Зробіть сучасніше».</b><br><br>
+
         Сформулюйте <b>2 запитання</b>,
         які допоможуть уточнити його вимогу.`;
     }
 
     if(level === 2) {
+
         task =
         `Запропонуйте замовнику
         <b>2 варіанти зміни дизайну</b>.<br><br>
+
         Визначте щонайменше
-        <b>2 критерії</b>, за якими можна
-        обрати між ними.`;
+        <b>2 критерії</b>,
+        за якими можна обрати між ними.`;
     }
 
     if(level === 3) {
+
         task =
         `Перетворіть фразу
         <b>«Зробіть сучасніше»</b>
         на конкретні вимоги до ТЗ,
-        які можна буде перевірити після виконання.`;
+        які можна буде перевірити
+        після виконання.`;
     }
 
     message(task);
@@ -430,9 +498,9 @@ function step1Task(level) {
 }
 
 
-/* -----------------------
+/* ==========================
    КРОК 2
------------------------ */
+========================== */
 
 async function step2() {
 
@@ -451,6 +519,8 @@ async function step2() {
 
     await delay(500);
 
+    showImage("step2.jpg", "Нова вимога до проєкту");
+
     message(
         `<b>Додайте особистий кабінет учня.</b><br><br>
         І щоб там були оцінки,
@@ -464,6 +534,7 @@ async function step2() {
     message(
         `Нова вимога вже впливає
         не лише на зовнішній вигляд продукту.<br><br>
+
         Оберіть рівень.`
     );
 
@@ -471,36 +542,45 @@ async function step2() {
 }
 
 
-/* -----------------------
+/* ==========================
    ЗАВДАННЯ КРОКУ 2
------------------------ */
+========================== */
 
 function step2Task(level) {
 
     let task = "";
 
     if(level === 1) {
+
         task =
         `Які <b>нові функції</b>
         потрібно додати до продукту?<br><br>
+
         Запишіть щонайменше три.`;
     }
 
     if(level === 2) {
+
         task =
         `Особистий кабінет означає
         роботу з даними.<br><br>
+
         Які <b>нові дані</b>
         тепер доведеться отримувати,
         зберігати або показувати?`;
     }
 
     if(level === 3) {
+
         task =
         `Перегляньте нову вимогу комплексно.<br><br>
+
         Визначте:<br><br>
-        <b>функції → дані → ризики →
-        вимоги до безпеки</b>.`;
+
+        <b>
+        функції → дані → ризики →
+        вимоги до безпеки
+        </b>.`;
     }
 
     message(task);
@@ -509,9 +589,9 @@ function step2Task(level) {
 }
 
 
-/* -----------------------
+/* ==========================
    КРОК 3
------------------------ */
+========================== */
 
 async function step3() {
 
@@ -523,18 +603,24 @@ async function step3() {
 
     message(
         `📄 <b>ТЗ знову оновлено.</b><br><br>
+
         До запуску залишилося
         лише <b>3 дні</b>.`,
         "system",
         "Проєкт"
     );
 
-    await delay(600);
+    await delay(500);
+
+    showImage("step3.jpg", "Замовник додає нову вимогу");
 
     message(
         `Все чудово!<br><br>
-        <b>А зробіть ще мобільний застосунок.
-        Це ж майже те саме 🙂</b>`,
+
+        <b>
+        А зробіть ще мобільний застосунок.
+        Це ж майже те саме 🙂
+        </b>`,
         "client",
         "Замовник"
     );
@@ -550,9 +636,9 @@ async function step3() {
 }
 
 
-/* -----------------------
+/* ==========================
    ЗАВДАННЯ КРОКУ 3
------------------------ */
+========================== */
 
 function step3Task(level) {
 
@@ -561,6 +647,7 @@ function step3Task(level) {
         message(
             `Що зміниться у проєкті,
             якщо команда погодиться?<br><br>
+
             Назвіть щонайменше
             <b>3 зміни</b>.`
         );
@@ -573,10 +660,14 @@ function step3Task(level) {
 
         message(
             `До запуску лише 3 дні.<br><br>
+
             Повноцінний мобільний застосунок
             команда створити не встигає.<br><br>
-            <b>Що можна запропонувати
-            замовнику натомість?</b>`
+
+            <b>
+            Що можна запропонувати
+            замовнику натомість?
+            </b>`
         );
 
         answerBox(3);
@@ -615,9 +706,9 @@ function step3Task(level) {
 }
 
 
-/* -----------------------
-   СТРАТЕГІЯ РІВНЯ 3
------------------------ */
+/* ==========================
+   ВИБІР СТРАТЕГІЇ
+========================== */
 
 function strategy(choice) {
 
@@ -636,19 +727,24 @@ function strategy(choice) {
 }
 
 
-/* -----------------------
+/* ==========================
    ПОЛЕ ВІДПОВІДІ
------------------------ */
+========================== */
 
 function answerBox(step) {
 
     setControls(`
-        <textarea id="answer"
-        placeholder="Введіть відповідь команди..."></textarea>
+        <textarea
+            id="answer"
+            placeholder="Введіть відповідь команди...">
+        </textarea>
 
-        <button class="main-button"
-        onclick="submitAnswer(${step})">
+        <button
+            class="main-button"
+            onclick="submitAnswer(${step})">
+
             Надіслати відповідь
+
         </button>
     `);
 }
@@ -659,7 +755,9 @@ function submitAnswer(step) {
     const field = document.getElementById("answer");
 
     if(!field || field.value.trim() === "") {
+
         alert("Спочатку введіть відповідь.");
+
         return;
     }
 
@@ -677,20 +775,27 @@ function submitAnswer(step) {
         "Ваша команда"
     );
 
+
     if(step === 1) {
 
         message(
             `✅ Нечітку вимогу не варто
             одразу виконувати.<br><br>
+
             Спочатку її потрібно
-            <b>уточнити й перетворити
-            на зрозуміле ТЗ.</b>`
+            <b>
+            уточнити й перетворити
+            на зрозуміле ТЗ.
+            </b>`
         );
 
         setControls(`
-            <button class="main-button"
-            onclick="step2()">
+            <button
+                class="main-button"
+                onclick="step2()">
+
                 Наступне повідомлення →
+
             </button>
         `);
     }
@@ -702,14 +807,18 @@ function submitAnswer(step) {
             `✅ Одна нова функція
             може змінити одразу кілька
             частин проєкту:<br><br>
+
             функції, дані, безпеку,
             обсяг роботи та тестування.`
         );
 
         setControls(`
-            <button class="main-button"
-            onclick="step3()">
+            <button
+                class="main-button"
+                onclick="step3()">
+
                 Продовжити →
+
             </button>
         `);
     }
@@ -725,80 +834,105 @@ function submitAnswer(step) {
         );
 
         setControls(`
-            <button class="main-button"
-            onclick="finish()">
+            <button
+                class="main-button"
+                onclick="finish()">
+
                 🏁 Завершити проєкт
+
             </button>
         `);
     }
 }
 
 
-/* -----------------------
+/* ==========================
    ФІНАЛ
------------------------ */
+========================== */
 
 function finish() {
 
     setProgress(100, "Квест завершено");
+
+    showImage("final.jpg", "Фінал ІТ-проєкту");
 
     message(
         `<b>🎯 ПРОЄКТ ЗАВЕРШЕНО</b><br><br>
 
         ТЗ v1 — простий сайт<br>
         ↓<br>
+
         ТЗ v2 — уточнений дизайн<br>
         ↓<br>
+
         ТЗ v3 — особистий кабінет і дані<br>
         ↓<br>
+
         Нова вимога — мобільний застосунок`,
         "system",
         "Результат"
     );
 
+
     message(
         `<div class="final-box">
 
-        <b>Що насправді робила команда?</b><br><br>
+        <b>Що насправді робила команда?</b>
+
+        <br><br>
 
         Нова вимога<br>
         ↓<br>
+
         <b>Уточнення</b><br>
         ↓<br>
+
         <b>Оцінка впливу</b><br>
         ↓<br>
+
         <b>Рішення</b><br>
         ↓<br>
+
         <b>Оновлене ТЗ</b>
 
         </div>`
     );
 
+
     message(
         `<b>Головний висновок</b><br><br>
+
         ТЗ у реальному ІТ-проєкті
         може змінюватися.<br><br>
+
         Завдання команди —
         не бездумно виконувати кожне
         нове побажання, а
-        <b>уточнювати вимоги,
+
+        <b>
+        уточнювати вимоги,
         оцінювати наслідки,
         домовлятися із замовником
-        та адаптувати рішення.</b>`
+        та адаптувати рішення.
+        </b>`
     );
 
+
     setControls(`
-        <button class="main-button"
-        onclick="restartQuest()">
+        <button
+            class="main-button"
+            onclick="restartQuest()">
+
             🔄 Пройти ще раз
+
         </button>
     `);
 }
 
 
-/* -----------------------
+/* ==========================
    ПОВТОР
------------------------ */
+========================== */
 
 function restartQuest() {
 
@@ -814,7 +948,7 @@ function restartQuest() {
 }
 
 
-/* запуск */
+/* ЗАПУСК */
 
 startScreen();
 
