@@ -280,11 +280,11 @@ function message(text, type="bot", name="Квест") {
    ЗОБРАЖЕННЯ
 
    Тут вказані назви файлів:
-   start.jpg
-   step1.jpg
-   step2.jpg
-   step3.jpg
-   final.jpg
+   start.png
+   step1.png
+   step2.png
+   step3.png
+   final.png
 -------------------------- */
 
 function showImage(filename, altText="Ілюстрація") {
@@ -343,7 +343,7 @@ async function startScreen() {
         До вас звернулася школа з новим проєктом.`
     );
 
-    showImage("start.jpg", "Старт ІТ-проєкту");
+    showImage("start.png", "Старт ІТ-проєкту");
 
     await delay(400);
 
@@ -389,7 +389,7 @@ async function step1() {
 
     await delay(500);
 
-    showImage("step1.jpg", "Замовник просить змінити дизайн");
+    showImage("step1.png", "Замовник просить змінити дизайн");
 
     message(
         `Подивився першу версію.<br><br>
@@ -519,7 +519,7 @@ async function step2() {
 
     await delay(500);
 
-    showImage("step2.jpg", "Нова вимога до проєкту");
+    showImage("step2.png", "Нова вимога до проєкту");
 
     message(
         `<b>Додайте особистий кабінет учня.</b><br><br>
@@ -612,7 +612,7 @@ async function step3() {
 
     await delay(500);
 
-    showImage("step3.jpg", "Замовник додає нову вимогу");
+    showImage("step3.png", "Замовник додає нову вимогу");
 
     message(
         `Все чудово!<br><br>
@@ -854,7 +854,7 @@ function finish() {
 
     setProgress(100, "Квест завершено");
 
-    showImage("final.jpg", "Фінал ІТ-проєкту");
+    showImage("final.png", "Фінал ІТ-проєкту");
 
     message(
         `<b>🎯 ПРОЄКТ ЗАВЕРШЕНО</b><br><br>
